@@ -1,7 +1,9 @@
 apiVersion: ec2.aws.gke.cloud.google.com/v1beta1
 kind: VPC
 metadata:
-  name: vpc-dev
+  name: vpc-autopush
+  labels:
+    env: autopush
 spec:
   providerConfigRef:
     name: default-aws
