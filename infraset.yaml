@@ -1,0 +1,49 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: myinfras
+  namespace: argocd
+spec:
+  generators:
+  - git:
+      repoURL: https://github.com/Catramen/testargo.git
+      revision: HEAD
+      directories:
+      - path: infras/*
+  strategy:
+    type: RollingSync
+    rollingSync:
+      steps:
+        - matchExpressions:
+            - key: env
+              operator: In
+              values: 
+                - dev
+          maxUpdate: 0
+        - matchExpressions:
+            - key: env
+              operator: In
+              values: 
+                - autopush
+        - matchExpressions:
+            - key: env
+              operator: In
+              values:
+                - staging
+          maxUpdate: 1 
+  template:
+    metadata:
+      name: '{{path[1]}}'
+      labels:
+        env: '{{path[1]}}'
+    spec:
+      project: default
+      syncPolicy:
+        automated: {}
+      source:
+        repoURL:  https://github.com/Catramen/testargo.git
+        targetRevision: HEAD
+        path: '{{path}}'
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: '{{path.basename}}'
