@@ -19,7 +19,6 @@ spec:
               operator: In
               values: 
                 - dev
-          maxUpdate: 0
         - matchExpressions:
             - key: env
               operator: In
@@ -30,7 +29,6 @@ spec:
               operator: In
               values:
                 - staging
-          maxUpdate: 1 
   template:
     metadata:
       name: '{{path[1]}}'

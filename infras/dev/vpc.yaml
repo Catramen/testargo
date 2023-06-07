@@ -1,21 +1,14 @@
-apiVersion: apps/v1
-kind: Deployment
+apiVersion: ec2.aws.gke.cloud.google.com/v1beta1
+kind: VPC
 metadata:
-  name: nginx-deployment2
+  name: vpc-dev
   labels:
-    app: nginx
+    env: staging
 spec:
-  replicas: 3
-  selector:
-    matchLabels:
-      app: nginx
-  template:
-    metadata:
-      labels:
-        app: nginx
-    spec:
-      containers:
-      - name: nginx
-        image: nginx:1.14.2
-        ports:
-        - containerPort: 80
+  providerConfigRef:
+    name: default-aws
+  forProvider:
+    region: us-east-1
+    cidrBlock: 10.0.0.0/16
+    tags:
+      Name: staging-vpc2
